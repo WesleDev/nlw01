@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { FiArrowLeft } from 'react-icons/fi'
+import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi'
 import { Map, TileLayer, Marker } from 'react-leaflet'
 import axios from 'axios'
 import { LeafletMouseEvent } from 'leaflet'
@@ -32,6 +32,7 @@ const CreatePoint = () => {
     const [ufs, setUfs] = useState<string[]>([])
     const [cities, setCities] = useState<string[]>([])
 
+    
     const [selectedUF, setSelectedUf] = useState('0')
     const [selectedCity, setSelectedCity] = useState('0')
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0])
@@ -45,6 +46,7 @@ const CreatePoint = () => {
         whatsapp: '',
     })
 
+    const [finished, setFinished] = useState(false)
     const history = useHistory()
 
     useEffect(() => { //lista do backend de imagens de residuos
@@ -147,14 +149,20 @@ const CreatePoint = () => {
         
        await api.post('points', data)
 
-       alert('Ponto de coleta criado!')
-
-       history.push('/')
+       setFinished(true)
+       setTimeout(() => {
+           history.push('/')
+       }, 2000)
     }
 
 
     return (
         <div id="page-create-point">
+            {
+                finished ? <div id="finished"><FiCheckCircle color="#34CB79" size={60}/> 
+                <h1>Cadastro concluído!</h1>
+                </div> : null
+            }
             <header>
                 <img src={logo} alt="Ecoleta" />
 
